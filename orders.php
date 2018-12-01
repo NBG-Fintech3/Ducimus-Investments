@@ -1,4 +1,4 @@
-x`﻿<?php
+<?php
 	header('Content-type: text/html; charset:utf8');
 	include('inc/header.inc.php');
 	include('inc/connect.inc.php');	
@@ -43,18 +43,6 @@ x`﻿<?php
 			echo "<span style='text-align:center'><p style='font-size:18px'><font color='green'><b>PERFECT: </font>New 'OPEN' amount!</b></p></span><br/><br/>";
 		
 	}
-	#if (isset($_POST['close_action'])) {
-	#	if ( empty($_POST['close'])) {
-	#		echo "<span style='text-align:center'><p style='font-size:18px'><b><font color='red'><b>WARNING: </font>Amount field is empty dude.</b></p></span><br/><br/>";
-	#	}
-	#	else {
-	#		$insertQuery="INSERT INTO actions (action, amount )		
-	#				VALUES ('close','$_POST[close]')";
-	#		mysql_query($insertQuery, $con);
-	#		echo "<span style='text-align:center'><p style='font-size:18px'><font color='green'><b>PERFECT: </font>New 'CLOSE' amount!</b></p></span><br/><br/>";
-	#	}
-	#}
-
 
 	$sql1="SELECT * FROM actions";
 	$mydata1 = mysql_query($sql1, $con);
@@ -76,23 +64,7 @@ x`﻿<?php
 		</tr>";
 	}
 	echo "</table>";
-
-	#$sql_open_amount = "SELECT amount FROM actions";
-	#$mydata2 = mysql_query($sql_open_amount, $con);
-	#echo "<table width='100%'><br>
-	#<tr style='background-color:#FFFFF0'>
-	#	<th>OPEN AMOUNT</th>
-	#</tr>";
-	#while ($record5 = mysql_fetch_array($mydata2)){
-	#	echo "<form action='orders.php' method='POST'>
-	#	<tr style='border-style:none'>
-	#		<td style='border-style:none'>
-	#			<input type='text' name='amount' value='$record5[amount]' /><input type='hidden' name='open_amount' value='$record5[amount]'/><input type='submit' name='open_action' value='SUBMIT'/>
-	#		</td>
-	#	</tr>";
-	#}
 	echo "</table>";
-
 	echo "<table width='100%'><br>
 	<tr style='background-color:#FFFFF0'>
 		<th>ARBITRAGE</th>
@@ -128,11 +100,6 @@ x`﻿<?php
 		</tr>";
 	}
 	echo "</table>";
-
-
-
-
-
 echo"
 <br><br>
 <form id='form1' method='post' action='orders.php'>
@@ -145,10 +112,6 @@ echo"
 ?>
 <br><br><br><br>
 </div>
-
-
-
-
 
 <br><br>
 
