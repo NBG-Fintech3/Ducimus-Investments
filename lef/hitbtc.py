@@ -2,7 +2,7 @@ import requests
 
 
 hitbtc_base_url = 'https://api.hitbtc.com/api/2'
-api_kei = ''
+api_key = ''
 secret = ''
 
 
