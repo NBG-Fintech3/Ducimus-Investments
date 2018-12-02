@@ -1,120 +1,143 @@
-<?php
-	header('Content-type: text/html; charset:utf8');
-	include('inc/header.inc.php');
-	include('inc/connect.inc.php');	
+﻿<?php
+        header('Content-type: text/html; charset:utf8');
+        include('inc/header.inc.php');
+        include('inc/connect.inc.php');
+	$timer = 60;
+	$arb1 = rand(653, 901);
+	$arb2 = rand(401, 600);
+#	$js_arbitrage = exec('node /var/www/html/trading/js/main.js');
+#
 ?>
 
 <div id="menu">
-	<ul>
-		<li><a href="index.php" >EXCHANGES</a></li>
-		<li><a href="orders.php" style="background-color:#d6d6c2">ORDERS</a></li>
-	
-	</ul>
+        <ul>
+                <li><a href="index.php" >EXCHANGES</a></li>
+                <li><a href="orders.php" style="background-color:#d6d6c2">ORDERS</a></li>
+
+        </ul>
 </div>
 
 
-<?php
-	# We want the close or open amount with the greatest id as it is the last inserted!
-	#$sql_min_open_amount="SELECT * FROM actions WHERE action = 'open' ORDER BY id DESC LIMIT 1";
-	#$data = mysql_query($sql_min_open_amount, $con);
-	#$data_minimum_open_amount = mysql_fetch_array($data);
-	if (isset($_POST['update1'])) {
-		if ( empty($_POST['pair'])) {
-			echo "<span style='text-align:center'><p style='font-size:18px'><b><font color='red'><b>WARNING : </font> Pair field is empty dude.</b></p></span><br/><br/>";
-		}
-		else {
-			$updateQuery="UPDATE pairs
-						  SET pair = '$_POST[pair]'
-						  WHERE pair = '$_POST[update_value]'";
-			mysql_query($updateQuery, $con);
-			$updateQuery2="UPDATE actions
-						  SET amount = '$_POST[amount]'
-						  WHERE amount = '$_POST[open_amount]'";
-			mysql_query($updateQuery2, $con);
-			echo "<span style='text-align:center'><p style='font-size:18px'><font color='green'><b>PERFECT : </font> New 'PAIR' value's been submitted!</b></p></span><br/><br/>";
-		}
+<?php	
+	if (isset($_POST['json_refresh'])){
+		$sql_select_10_query = "SELECT * FROM arbitrage";
+		$last_10_arbitrage_data = mysql_query($sql_select_10_query, $con);
 	}
-	if (isset($_POST['open_action'])) {
-
-			$updateQuery="UPDATE actions
-						  SET amount = '$_POST[amount]'
-						  WHERE amount = '$_POST[open_amount]'";
-			mysql_query($updateQuery, $con);
-			echo "<span style='text-align:center'><p style='font-size:18px'><font color='green'><b>PERFECT: </font>New 'OPEN' amount!</b></p></span><br/><br/>";
-		
-	}
-
-	$sql1="SELECT * FROM actions";
-	$mydata1 = mysql_query($sql1, $con);
-	echo "<table width='80%' >
-	<tr style='background-color:#FFFFF0'>
-		<th>PAIR & AMOUNT</th>
-		
-		<th>CLOSE</th>
-	</tr>";
-	while ($record1 = mysql_fetch_array($mydata1)){
-		echo "<form action='orders.php' method='POST'>
-		<tr style='border-style:none'>
-			<td style='border-style:none'>
-				<input type='text' name='pair' value='$record1[pair]'/><input type='hidden' name='update_value' value='$record1[pair]'/><input type='text' name='amount' value='$record1[amount]' /><input type='hidden' name='open_amount' value='$record1[amount]'/><input type='submit' name='update1' value='SUBMIT'/>
-			</td>
-			<td style='border-style:none'>
-				<input type='submit' name='close_action' value='SUBMIT'/>
-			</td>
-		</tr>";
-	}
-	echo "</table>";
-	echo "</table>";
-	echo "<table width='100%'><br>
-	<tr style='background-color:#FFFFF0'>
-		<th>ARBITRAGE</th>
-	</tr>";
-		echo "<form action='orders.php' method='POST'>
-		<tr style='border-style:none'>
-			<td style='border-style:none'>
-				<input type='text' name='amount' value='5.3254' /><input type='submit' name=' ' value='REFRESH'/>
-			</td>
-		</tr>";
 	
-	echo "</table>";
+        if (isset($_POST['close_action'])){
+                $output = exec('python /var/www/html/trading/deploy.py');
+                echo "<span style='text-align:center'><p style='font-size:18px'><b><font color='green'><b>PERFECT : </font> Action 'close' has been submitted!</b></p></span><br/><br/>";
 
+        }
 
-	$sql_account_data = "SELECT * FROM account_info";
-	$account_data = mysql_query($sql_account_data, $con);
-	echo "<table width='100%' display: inline-block' ><br><br>
-	<tr style='background-color:#FFFFF0'>
-		<th>ACCOUNT INFO</th>
-	</tr>";
-	while ($record2 = mysql_fetch_array($account_data)){
-		echo "<form action='orders.php' method='POST'>
-		<tr style='border-style:none; background-color:#ccffcc'>
-			<td >
-				<div name='account'>OKEX : $record2[okex]</div>
-				<div name='account'>HITBTC : $record2[okex]</div>
-				<div name='account'>TOTAL : $record2[total]</div>
-				<div name='account'>TIMESTAMP : $record2[import_date]</div>
-				<input type='submit' name='close_action' value='REFRESH'/> <!-- THIS IS FOR PYTHON CALL -->
-
-			</td>
-
-		</tr>";
+        if (isset($_POST['update_pair_amount'])) {
+                if (empty($_POST['pair'])) {
+                        echo "<span style='text-align:center'><p style='font-size:18px'><b><font color='red'><b>WARNING : </font> Pair field is empty.</b></p></span><br/><br/>";
+                }
+                elseif (empty($_POST['amount'])) {
+                        echo "<span style='text-align:center'><p style='font-size:18px'><b><font color='red'><b>WARNING : </font> Amount field is empty.</b></p></span><br/><br/>";
+                }
+                else {  
+                        $update_pair_amount_Query="UPDATE actions SET 
+                                                pair = '$_POST[pair]', amount  = '$_POST[amount]'  WHERE id = '$_POST[id]'";
+                        mysql_query($update_pair_amount_Query, $con);
+                        echo "<span style='text-align:center'><p style='font-size:18px'><font color='green'><b>PERFECT : </font> New value's been submitted!</b></p></span><br/><br/>";
+                       # $js_arbitrage = exec("python -c 'import deploy; print deploy.beta()'");        
+		#	$js_arbitrage = exec('python /var/www/html/trading/py/lef/arbitrage.py');
+                }
 	}
-	echo "</table>";
-echo"
-<br><br>
-<form id='form1' method='post' action='orders.php'>
-<fieldset>
-	<legend style= 'text-align:center'> JSON RETURN: </legend>
+	if (isset($_POST['find_arbitrage'])) {
+		$py_arbitrage = exec('python /var/www/html/trading/py/lef/arbitrage.py');
+        }
 
-</fieldset>
-</form>";
 
+        echo
+                "<table width='80%' >
+			<meta http-equiv='refresh' content='";echo $timer; echo"' > 
+                        <tr style='background-color:#FFFFF0'>
+                                <th>PAIR & AMOUNT</th>
+                                <th>CLOSE</th>
+                        </tr>";
+                        $sql_select_actions_query="SELECT * FROM actions";
+                        $store_sql_select_actions = mysql_query($sql_select_actions_query, $con);
+                        while ($record = mysql_fetch_array($store_sql_select_actions)){
+		                echo
+		                        "<form action='' method='POST'>
+		                                <tr style='border-style:none'>
+		                                        <td style='border-style:none'>
+		                                                <input type='text' name='pair' value='$record[pair]'/><input type='hidden' name='id' value='$record[id]'/>
+		                                                <input type='text' name='amount' value='$record[amount]'/>
+		                                                <input type='submit' name='update_pair_amount' value='SUBMIT'/>
+		                                        </td>
+		                                        <td style='border-style:none'>
+		                                                <input type='submit' name='close_action' value='SUBMIT'/>
+		                                        </td>
+		                                </tr>";
+                        }
+        echo "</table>";	
+        echo "<table width='100%'><br>
+        <tr style='background-color:#FFFFF0'>
+                <th>ARBITRAGE :</th>
+        </tr>";
+	echo "<table width='100%'>
+	<tr style='background-color:#FFFFFF'>
+		
+	</tr>";
+		echo "<form action='orders.php' method='POST'>
+		<tr style='border-style:none'>
+			<td style='border-style:none'>
+				<input type='text' id='arbitrage' name='arbitrage' value='$py_arbitrage' />
+				<input type='submit' name='find_arbitrage' value='SUBMIT'/>
+			</td>
+		</tr>";
+               
+
+        echo "</table>";
+        $sql_account_data = "SELECT * FROM account_info";
+        $account_data = mysql_query($sql_account_data, $con);
+        echo "<table width='100%' display: inline-block' ><br><br>
+        <tr style='background-color:#FFFFF0'>
+                <th>ACCOUNT INFO</th>
+        </tr>";
+        while ($record2 = mysql_fetch_array($account_data)){
+                echo "<form action='orders.php' method='POST'>
+                <tr style='border-style:none; background-color:#ccffcc'>
+                        <td >
+                                <div name='account'>OKEX : $record2[okex]</div>
+                                <div name='account'>HITBTC : $record2[hitbtc]</div>
+                                <div name='account'>TOTAL : $record2[total]</div>
+                                <div name='account'>TIMESTAMP : $record2[import_date]</div>
+                                <input type='submit' name='account_refresh' value='REFRESH'/> <!-- THIS IS FOR PYTHON CALL -->
+
+                        </td>
+
+                </tr>";
+        }
+        echo "</table>";
+	
+		$record3 = mysql_fetch_array($last_10_arbitrage_data);
+                      
+	echo"<br><form id='form1' method='post' action='orders.php' style='text-align:center'>
+		        <fieldset>
+		                <legend style= 'margin-left:40%'>JSON Return: </legend>";
+				while ($record3 = mysql_fetch_array($last_10_arbitrage_data)){
+
+		                	echo"<div style='text-align:center'> $record3[pair] - $record[arbitrage]</div>";
+					echo"<div>$record3[arbitrage]</div>";
+			}
+		        echo"</fieldset>
+			<input type='submit' style='margin-left:46.7%' name='json_refresh' value='REFRESH'/>
+		</form>";
+
+
+		
 ?>
+
 <br><br><br><br>
 </div>
-
 <br><br>
 
 <?php
-	include('inc/footer.inc.php');
+        include('inc/footer.inc.php');
 ?>
+

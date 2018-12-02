@@ -19,9 +19,9 @@ if (isset($_POST['addnew'])) {
 		echo "<span style='text-align:center'><p style='font-size:18px'><font color='red'><b>WARNING: </font> You need to fill in something dude! Please try again.</b></p></span><br/><br/>";
 	}
 	else {
-		$addQuery="INSERT INTO EXCHANGE_CREDENTIALS (exchange, api_key, secret_key, passphrase)		
+		$addQuery="INSERT INTO exchange_credentials (exchange, api_key, secret_key, passphrase)		
 					VALUES ('okex','$_POST[okex_api_key]','$_POST[okex_secret_key]','$_POST[okex_passphrase]')";
-		$addQuery2="INSERT INTO EXCHANGE_CREDENTIALS (exchange, api_key, secret_key, passphrase)		
+		$addQuery2="INSERT INTO exchange_credentials (exchange, api_key, secret_key, passphrase)		
 					VALUES ('hitbtc','$_POST[hitbtc_api_key]','$_POST[hitbtc_secret_key]','$_POST[hitbtc_passphrase]')";			
 		mysql_query($addQuery,$con); 
 		mysql_query($addQuery2,$con); 
@@ -30,7 +30,7 @@ if (isset($_POST['addnew'])) {
 }
 
 echo"
-<form id='form1' method='post' action='orders.php'>
+<form id='form1' method='post' action='index.php'>
 <fieldset>
 	<legend>Store data from exchanges in MySQL DB :</legend>
 	<p style='text-align:center; margin-right:5%'>OKEX EXCHANGE : </p>
@@ -67,7 +67,7 @@ echo"
 		<input id='submit1' class='submit' type='submit' name='addnew' value='Submit'/>
 	</label>
 
-</fieldset>
+</fieldset> 
 </form>";
 
 ?>
