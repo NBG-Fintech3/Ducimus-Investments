@@ -2,8 +2,8 @@ import requests
 
 
 hitbtc_base_url = 'https://api.hitbtc.com/api/2'
-api_kei = '4bf0ef13bdada74384be1d3a0c9faab2'
-secret = '1a8ddbadbdcbd91824d7222b03a4af3e'
+api_kei = ''
+secret = ''
 
 
 #                   PUBLIC ENDPOINTS
