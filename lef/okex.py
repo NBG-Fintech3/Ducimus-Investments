@@ -6,9 +6,9 @@ import time
 
 
 #                       DATA
-api_key = 'd5ada491-2898-4f6f-b0d0-5f3d92b56fd5'
-passphrase = 'Liverpoolfc7!'
-secret = 'F0FE0474EE5C92733DE300CD1311E6F5'
+api_key = ''
+passphrase = ''
+secret = ''
 
 okex_margin = ['eth_btc', 'bch_usdt', 'ltc_btc', 'etc_btc', 'eth_usdt','btc_usdt', 'ltc_usdt', 'etc_usdt',
                'qtun_btc', 'xrp_btc', 'xrp_usdt', 'eos_usdt', 'eos_btc', 'iost_btc']
