@@ -10,4 +10,4 @@ Two types of store databases are used:
 
 The arbitrage is traced manually via REST-API technology between server & client and in a future version sockets will be used or an upgrade to Google Firebase realtime database.
 
-The platform is deployed on Google Clouc platform.
+The platform is deployed on Google Cloud platform.
